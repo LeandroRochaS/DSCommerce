@@ -43,4 +43,6 @@ public class User {
     @OneToMany(mappedBy = "client")
     private ArrayList<Order> orders = new ArrayList<>();
 
+
+    // Gets and Setters
 }
