@@ -1,6 +1,5 @@
 package com.leandro.dscommerce.Service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.leandro.dscommerce.DTO.ProductDTO;
 import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Repository.ProductRepository;
+import com.leandro.dscommerce.Service.Exceptions.ResourceNotFoundException;
 
 import java.util.Optional;
 
@@ -28,20 +28,20 @@ public class ProductService {
     }
 
 
-    public ResponseEntity<ProductDTO> findById(Long id) {
+    public ResponseEntity<?> findById(Long id) {
         try {
             Optional<Product> productOptional = productRepository.findById(id);
             if (productOptional.isPresent()) {
                 ProductDTO productDTO = new ProductDTO(productOptional.get());
                 return ResponseEntity.ok(productDTO);
             } else {
-                return ResponseEntity.notFound().build(); // Retorna status 404
+                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Trate ou registre a exceção adequadamente
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Retorna status 500
-        }
+            throw new RuntimeException("Error while fetching product by ID", e);
+        }   
     }
+    
 
 
     public Product save(ProductDTO productDTO){
@@ -59,8 +59,15 @@ public class ProductService {
         }
     }
 
-    public void delete(Long id){
-      productRepository.deleteById(id);
+    public boolean deleteProductById(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if (productOptional.isPresent()) {
+            productRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public ProductDTO update(Long id, ProductDTO productDTO){

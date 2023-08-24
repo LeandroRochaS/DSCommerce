@@ -12,10 +12,8 @@ import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Service.ProductService;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -26,12 +24,16 @@ public class ProductController {
 
     @GetMapping
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
+        try {
         return productService.findAll(pageable);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
     public ProductDTO getProduct(@PathVariable Long id) {
-        ProductDTO productDTO = productService.findById(id).getBody();
+        ProductDTO productDTO = (ProductDTO) productService.findById(id).getBody();
 
         if (productDTO == null) {
             // Se o produto não for encontrado, retorna o status 204
@@ -59,21 +61,22 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            if(productService.findById(id) != null) {
-                productService.delete(id);
+            boolean deleted = productService.deleteProductById(id);
+            
+            if (deleted) {
                 return ResponseEntity.noContent().build();
-            }
-            else {
+            } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID not found");
             }
-
-        } catch (Exception e){
-            throw new RuntimeException(e.getMessage());        }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
-
-    @PutMapping
+    
+    
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody ProductDTO form, @PathVariable Long id){
         if (form.isIncomplete()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("incomplete information");
@@ -84,7 +87,7 @@ public class ProductController {
         if (product!= null) {
             return ResponseEntity.ok(product);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Failed to update product");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id not found");
         }
         
     }
