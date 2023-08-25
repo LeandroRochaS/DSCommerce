@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.leandro.dscommerce.Entity.Product;
 
-import java.util.Optional;
-
 public interface ProductRepository extends JpaRepository<Product, Long> {
     
     @Override

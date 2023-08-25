@@ -2,14 +2,11 @@ package com.leandro.dscommerce.Service;
 
 import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
 import org.hibernate.LazyInitializationException;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.leandro.dscommerce.DTO.ProductDTO;

@@ -30,10 +30,10 @@
 		@Column(columnDefinition = "TEXT")
 		private String description;
 
-		@Positive(message = "O preço não pode ser nulo")
+		@Positive(message = "O preço não pode ser negativo")
 		private Double price;
 
-		@NotEmpty(message = "A URL da imagem não pode estar vazia")
+		@NotBlank(message = "A URL da imagem não pode estar vazia")
 		private String imgUrl;
 
 		public ProductDTO(Product product) {
