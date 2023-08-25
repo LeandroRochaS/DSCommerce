@@ -1,6 +1,11 @@
 package com.leandro.dscommerce.Service;
 
+import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
+import org.hibernate.LazyInitializationException;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,13 +17,35 @@ import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Repository.ProductRepository;
 import com.leandro.dscommerce.Service.Exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 @Service
 public class ProductService {
-
     @Autowired
     private ProductRepository productRepository;
+
+
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteProductById(Long id) {
+        try {
+            Optional<Product> productOptional = productRepository.findById(id);
+
+            if (productOptional.isEmpty()) {
+                throw new ResourceNotFoundException("Produto com o ID " + id + " não encontrado.");
+            }
+            productRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Este produto está sendo referenciado por outras entidades e não pode ser excluído.");
+        }
+    }
+
 
 
 
@@ -27,22 +54,16 @@ public class ProductService {
         return result.map(x -> new ProductDTO(x));
     }
 
-
-    public ResponseEntity<?> findById(Long id) {
+    public ProductDTO findById(Long id) {
         try {
-            Optional<Product> productOptional = productRepository.findById(id);
-            if (productOptional.isPresent()) {
-                ProductDTO productDTO = new ProductDTO(productOptional.get());
-                return ResponseEntity.ok(productDTO);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
+
+            return new ProductDTO(product);
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching product by ID", e);
-        }   
+        }
     }
-    
-
 
     public Product save(ProductDTO productDTO){
         try {
@@ -59,37 +80,25 @@ public class ProductService {
         }
     }
 
-    public boolean deleteProductById(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-
-        if (productOptional.isPresent()) {
-            productRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+    
+    public ProductDTO update(Long id, ProductDTO productDTO) {
+        try {
+            Product entity = productRepository.getReferenceById(id);
+            copyDTOtoEntity(productDTO, entity);
+            entity = productRepository.save(entity);
+            return new ProductDTO(entity);
+        } catch (EntityNotFoundException | LazyInitializationException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
         }
     }
-
-    public ProductDTO update(Long id, ProductDTO productDTO){
-    try {
-            Optional<Product> productOptional = productRepository.findById(id);
-            if (productOptional.isPresent()) {
-                Product product = productOptional.get();
-                product.setName(productDTO.getName());
-                product.setDescription(productDTO.getDescription());
-                product.setImgUrl(productDTO.getImgUrl());
-                product.setPrice(productDTO.getPrice());
-                return new ProductDTO(productRepository.save(product));
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            // Trate ou registre a exceção adequadamente
-            e.printStackTrace(); // Por exemplo, imprime a exceção para depuração
-            return null; // Retorne um ProductReturnDTO vazio ou lance uma exceção de erro interno.
-        }
     
-}
 
+    private void copyDTOtoEntity(ProductDTO productDTO, Product entity) {
+    entity.setName(productDTO.getName());
+    entity.setDescription(productDTO.getDescription());
+    entity.setImgUrl(productDTO.getImgUrl());
+    entity.setPrice(productDTO.getPrice());
+    // Copie outros campos, se necessário
+}
 
 }
