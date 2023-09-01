@@ -1,17 +1,17 @@
 	package com.leandro.dscommerce.DTO;
 
-	import com.leandro.dscommerce.Entity.Product;
+	import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
+import com.leandro.dscommerce.Entity.Product;
 
-	import jakarta.persistence.Column;
-	import jakarta.validation.constraints.NotBlank;
-	import jakarta.validation.constraints.NotEmpty;
-	import jakarta.validation.constraints.Positive;
-	import jakarta.validation.constraints.Size;
-	import lombok.AllArgsConstructor;
-	import lombok.Getter;
-	import lombok.NoArgsConstructor;
-	import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 	@Getter
@@ -42,6 +42,8 @@
 			this.price = product.getPrice();
 			this.imgUrl = product.getImgUrl();
 		}
+		
+		public ProductDTO() {}
 
 		public String getName() {
 			return name;

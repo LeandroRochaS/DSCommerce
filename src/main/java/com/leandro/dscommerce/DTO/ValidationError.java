@@ -1,18 +1,15 @@
 package com.leandro.dscommerce.DTO;
 
-import com.leandro.dscommerce.Service.Exceptions.CustomError;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.leandro.dscommerce.Service.Exceptions.CustomError;
 
 public class ValidationError extends CustomError {
 
     private List<FieldMessage> erros = new ArrayList<>();
 
-    public ValidationError(List<FieldMessage> erros) {
-        this.erros = erros;
-    }
 
     public ValidationError(Instant timeStamp, Integer status, String error, String path) {
         super(timeStamp, status, error, path);

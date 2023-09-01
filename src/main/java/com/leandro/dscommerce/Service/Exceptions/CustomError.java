@@ -13,6 +13,8 @@ public class CustomError {
     private String error;
     private String path;
     
+ 
+    
     public CustomError(Instant timeStamp, Integer status, String error, String path) {
         this.timeStamp = timeStamp;
         this.status = status;

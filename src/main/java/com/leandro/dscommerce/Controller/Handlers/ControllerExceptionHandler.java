@@ -1,7 +1,9 @@
 package com.leandro.dscommerce.Controller.Handlers;
 
-import com.leandro.dscommerce.DTO.ValidationError;
-import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
+import java.time.Instant;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -9,12 +11,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.leandro.dscommerce.DTO.ValidationError;
 import com.leandro.dscommerce.Service.Exceptions.CustomError;
+import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
 import com.leandro.dscommerce.Service.Exceptions.ResourceNotFoundException;
-
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.time.Instant;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -43,5 +43,13 @@ public class ControllerExceptionHandler {
         }
         return ResponseEntity.status(status).body(error);
     }
+    
+    @ExceptionHandler(org.springframework.web.HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<CustomError> httpMediaTypeNotAcceptable2(org.springframework.web.HttpMediaTypeNotAcceptableException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.NOT_ACCEPTABLE; // Escolha o status apropriado
+        CustomError error = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
 
 }
