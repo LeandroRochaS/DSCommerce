@@ -8,9 +8,6 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import lombok.Data;
-
-@Data
 @Entity
 @Table(name = "tb_role")
 public class Role implements GrantedAuthority{	
@@ -27,7 +24,6 @@ public class Role implements GrantedAuthority{
 	
 	
 	public Role(Long id, String authority) {
-		super();
 		this.id = id;
 		this.authority = authority;
 	}
@@ -47,6 +43,9 @@ public class Role implements GrantedAuthority{
 	}
 	public void setAuthority(String authority) {
 		this.authority = authority;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 	

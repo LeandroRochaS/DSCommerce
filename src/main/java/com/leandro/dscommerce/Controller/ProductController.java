@@ -31,10 +31,11 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public Page<ProductDTO> getAllProducts(@RequestParam(value = "name", defaultValue = "") String name  ,Pageable pageable) {
+    public Page<ProductDTO> getAllProducts(@RequestParam(defaultValue = "") String name  ,Pageable pageable) {
         try {
-        return productService.findAll(name, pageable);
-        } catch (Exception e) {
+        	return productService.findAll(name, pageable);
+        } 
+        catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }

@@ -1,8 +1,10 @@
 package com.leandro.dscommerce.Entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -22,17 +24,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.leandro.dscommerce.Entity.Order.Order;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 @Entity
 @Table(name = "tb_user")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
@@ -51,10 +44,29 @@ public class User implements UserDetails {
 	private LocalDate birthDate;
 
 	private String password;
+	
+	
 
+
+	public User() {
+		super();
+	}
+
+	public User(Long id, String name, String email, String phone, LocalDate birthDate, String password,
+			List<Order> orders, Set<Role> roles) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.birthDate = birthDate;
+		this.password = password;
+		this.orders = orders;
+		this.roles = roles;
+	}
 
 	@OneToMany(mappedBy = "client")
-	private Set<Order> orders = new HashSet<>();
+	private List<Order> orders = new ArrayList<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tb_user_role",
@@ -64,45 +76,102 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
 		return roles;
+	}
+	
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
 		return password;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return email;
 	}
+	
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	
 	// Gets and Setters
 }

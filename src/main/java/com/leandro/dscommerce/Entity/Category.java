@@ -27,7 +27,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @SuppressWarnings("unused")
+	private String name;
     
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products = new HashSet<>();

@@ -1,7 +1,6 @@
 package com.leandro.dscommerce.Entity.Order;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +27,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Table(name = "tb_order")
 @Data
@@ -53,10 +51,8 @@ public class Order {
     private Payment payment;
 
     @ManyToMany
-    @JoinTable(name = "tb_order_product",
-        joinColumns = @JoinColumn(name = "order_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products = new HashSet<>(); 
+    @JoinTable(name = "tb_order_product", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
@@ -69,6 +65,4 @@ public class Order {
         return items.stream().map(x -> x.getProduct()).toList();
     }
 
-
-    
 }

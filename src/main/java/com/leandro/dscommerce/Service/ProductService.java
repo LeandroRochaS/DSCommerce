@@ -4,28 +4,24 @@ import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import com.leandro.dscommerce.DTO.ProductDTO;
 import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Repository.ProductRepository;
 import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
-import com.leandro.dscommerce.Service.Exceptions.HttpMediaTypeNotAcceptableException;
 import com.leandro.dscommerce.Service.Exceptions.ResourceNotFoundException;
 
 @Service
 public class ProductService {
-    @Autowired
+    
+	@Autowired
     private ProductRepository productRepository;
-
-
 
     public void deleteProductById(Long id) {
         try {
@@ -38,12 +34,10 @@ public class ProductService {
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         } catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Este produto está sendo referenciado por outras entidades e não pode ser excluído.");
+            throw new DataBaseException(
+                    "Este produto está sendo referenciado por outras entidades e não pode ser excluído.");
         }
     }
-
-
-
 
     public Page<ProductDTO> findAll(String name, Pageable pageable) {
         Page<Product> result = productRepository.searchByName(name, pageable);
@@ -61,7 +55,7 @@ public class ProductService {
         }
     }
 
-    public Product save(ProductDTO productDTO){
+    public Product save(ProductDTO productDTO) {
         try {
             Product product = new Product();
             product.setName(productDTO.getName());
@@ -76,28 +70,26 @@ public class ProductService {
         }
     }
 
-    
     public ProductDTO update(Long id, ProductDTO productDTO) {
         try {
             Product entity = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
             entity = productRepository.save(copyDTOtoEntity(productDTO, entity));
             return new ProductDTO(entity);
-        } catch (EntityNotFoundException | LazyInitializationException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         } catch (ResourceNotFoundException e) {
             // Trate a exceção de tipo de mídia não aceitável aqui
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
     }
-    
 
     private Product copyDTOtoEntity(ProductDTO productDTO, Product entity) {
-    entity.setName(productDTO.getName());
-    entity.setDescription(productDTO.getDescription());
-    entity.setImgUrl(productDTO.getImgUrl());
-    entity.setPrice(productDTO.getPrice());
-    return entity;
+        entity.setName(productDTO.getName());
+        entity.setDescription(productDTO.getDescription());
+        entity.setImgUrl(productDTO.getImgUrl());
+        entity.setPrice(productDTO.getPrice());
+        return entity;
     }
 
 }
