@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,7 @@ public class ProductController {
         
     }
     
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Validated @RequestBody ProductDTO form){
 
@@ -61,12 +63,14 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> update(@Validated @RequestBody ProductDTO form, @PathVariable Long id) {
     ProductDTO dto = productService.update(id, form);
