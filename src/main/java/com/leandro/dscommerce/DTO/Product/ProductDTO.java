@@ -1,4 +1,7 @@
-package com.leandro.dscommerce.DTO;
+package com.leandro.dscommerce.DTO.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
@@ -6,6 +9,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.leandro.dscommerce.DTO.CategoryDTO;
+import com.leandro.dscommerce.Entity.Category;
 import com.leandro.dscommerce.Entity.Product;
 
 import lombok.AllArgsConstructor;
@@ -31,12 +36,18 @@ public class ProductDTO {
 
 	@NotBlank(message = "A URL da imagem não pode estar vazia")
 	private String imgUrl;
+	
+	@NotEmpty(message = "Deve ter pelo menos uma categoria")
+	private List<CategoryDTO> categories = new ArrayList<>();
 
 	public ProductDTO(Product product) {
 		this.name = product.getName();
 		this.description = product.getDescription();
 		this.price = product.getPrice();
 		this.imgUrl = product.getImgUrl();
+		for(Category cat: product.getCategories()) {
+			categories.add(new CategoryDTO(cat));
+		}
 	}
 
 	public ProductDTO() {
@@ -72,6 +83,12 @@ public class ProductDTO {
 
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
+	}
+	
+	
+
+	public List<CategoryDTO> getCategories() {
+		return categories;
 	}
 
 	public boolean isIncomplete() {

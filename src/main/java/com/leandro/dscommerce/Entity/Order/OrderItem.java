@@ -44,6 +44,17 @@ public class OrderItem {
         id.setProduct(product);
     }
 
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+    
+    
+    
+
 
 
 }

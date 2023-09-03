@@ -29,9 +29,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_order")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class Order {
 
     @Id
@@ -56,8 +54,97 @@ public class Order {
 
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
+    
+    
+    
 
-    public Set<OrderItem> getItems() {
+    public Order(Long id, Instant moment, OrderStatus status, User client, Payment payment, Set<Product> products,
+			Set<OrderItem> items) {
+		super();
+		this.id = id;
+		this.moment = moment;
+		this.status = status;
+		this.client = client;
+		this.payment = payment;
+		this.products = products;
+		this.items = items;
+	}
+    
+    
+
+	public Long getId() {
+		return id;
+	}
+
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+
+	public Instant getMoment() {
+		return moment;
+	}
+
+
+
+	public void setMoment(Instant moment) {
+		this.moment = moment;
+	}
+
+
+
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
+	}
+
+
+
+	public User getClient() {
+		return client;
+	}
+
+
+
+	public void setClient(User client) {
+		this.client = client;
+	}
+
+
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+
+
+	public void setItems(Set<OrderItem> items) {
+		this.items = items;
+	}
+
+
+
+	public Set<OrderItem> getItems() {
         return items;
     }
 

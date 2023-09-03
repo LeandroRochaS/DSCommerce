@@ -11,7 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.leandro.dscommerce.DTO.ProductDTO;
+import com.leandro.dscommerce.DTO.CategoryDTO;
+import com.leandro.dscommerce.DTO.Product.ProductDTO;
+import com.leandro.dscommerce.DTO.Product.ProductMinDTO;
+import com.leandro.dscommerce.Entity.Category;
 import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Repository.ProductRepository;
 import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
@@ -34,14 +37,14 @@ public class ProductService {
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         } catch (DataIntegrityViolationException e) {
-            throw new DataBaseException(
+           throw new DataBaseException(
                     "Este produto está sendo referenciado por outras entidades e não pode ser excluído.");
         }
     }
 
-    public Page<ProductDTO> findAll(String name, Pageable pageable) {
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
         Page<Product> result = productRepository.searchByName(name, pageable);
-        return result.map(x -> new ProductDTO(x));
+        return result.map(x -> new ProductMinDTO(x));
     }
 
     public ProductDTO findById(Long id) {
@@ -89,6 +92,10 @@ public class ProductService {
         entity.setDescription(productDTO.getDescription());
         entity.setImgUrl(productDTO.getImgUrl());
         entity.setPrice(productDTO.getPrice());
+        entity.getCategories().clear();
+        for(CategoryDTO catDto: productDTO.getCategories()) {
+        	entity.getCategories().add(new Category(catDto));
+        }
         return entity;
     }
 

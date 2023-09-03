@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.leandro.dscommerce.DTO.ProductDTO;
+import com.leandro.dscommerce.DTO.Product.ProductDTO;
+import com.leandro.dscommerce.DTO.Product.ProductMinDTO;
 import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Service.ProductService;
 
@@ -32,7 +33,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public Page<ProductDTO> getAllProducts(@RequestParam(defaultValue = "") String name  ,Pageable pageable) {
+    public Page<ProductMinDTO> getAllProducts(@RequestParam(defaultValue = "") String name  ,Pageable pageable) {
         try {
         	return productService.findAll(name, pageable);
         } 
