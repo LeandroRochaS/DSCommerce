@@ -7,12 +7,10 @@ import javax.persistence.Table;
 import com.leandro.dscommerce.Entity.Product;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_order_item")
 @Data
-@NoArgsConstructor
 public class OrderItem {
 
     @EmbeddedId
@@ -21,16 +19,14 @@ public class OrderItem {
     private Integer quantity;
     private Double price;
     
-    public OrderItem() {
-    	
-    }
-    
-    public OrderItem(Order order,Product product, Integer quantity, Double price) {
+    public OrderItem(Order order, Product product, Integer quantity, Double price) {
         id.setOrder(order);
         id.setProduct(product);
         this.quantity = quantity;
         this.price = price;
     }
+    
+   public OrderItem() {}
 
     public Order getOrder() {
         return id.getOrder();
@@ -48,17 +44,11 @@ public class OrderItem {
         id.setProduct(product);
     }
 
-	public Integer getQuantity() {
-		return quantity;
-	}
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-	public Double getPrice() {
-		return price;
-	}
-    
-    
-    
-
-
-
+    public Double getPrice() {
+        return price;
+    }
 }

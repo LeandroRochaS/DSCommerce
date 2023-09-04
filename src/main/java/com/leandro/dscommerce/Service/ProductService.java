@@ -10,12 +10,14 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.leandro.dscommerce.DTO.CategoryDTO;
 import com.leandro.dscommerce.DTO.Product.ProductDTO;
 import com.leandro.dscommerce.DTO.Product.ProductMinDTO;
 import com.leandro.dscommerce.Entity.Category;
 import com.leandro.dscommerce.Entity.Product;
+import com.leandro.dscommerce.Repository.CategoryRepository;
 import com.leandro.dscommerce.Repository.ProductRepository;
 import com.leandro.dscommerce.Service.Exceptions.DataBaseException;
 import com.leandro.dscommerce.Service.Exceptions.ResourceNotFoundException;
@@ -25,6 +27,9 @@ public class ProductService {
     
 	@Autowired
     private ProductRepository productRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
     public void deleteProductById(Long id) {
         try {
@@ -57,19 +62,17 @@ public class ProductService {
             throw new RuntimeException("Error while fetching product by ID", e);
         }
     }
-
+    
+    @Transactional
     public Product save(ProductDTO productDTO) {
         try {
             Product product = new Product();
-            product.setName(productDTO.getName());
-            product.setDescription(productDTO.getDescription());
-            product.setImgUrl(productDTO.getImgUrl());
-            product.setPrice(productDTO.getPrice());
+            copyDTOtoEntity(productDTO, product);
             return productRepository.save(product);
         } catch (Exception e) {
-            // Trate ou registre a exceção adequadamente
-            e.printStackTrace(); // Por exemplo, imprime a exceção para depuração
-            return null; // Retorne um ProductReturnDTO vazio ou lance uma exceção de erro interno.
+
+            e.printStackTrace();
+            return null; 
         }
     }
 
@@ -95,7 +98,7 @@ public class ProductService {
         entity.getCategories().clear();
         for(CategoryDTO catDto: productDTO.getCategories()) {
         	entity.getCategories().add(new Category(catDto));
-        }
+        } 
         return entity;
     }
 

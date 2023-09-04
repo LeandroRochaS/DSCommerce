@@ -43,12 +43,11 @@ public class OrderService {
 		}
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public OrderDTO save(OrderDTO orderDto) {
 		try {
 			Order order = new Order();
 			order.setMoment(Instant.now());
-			;
 			order.setStatus(OrderStatus.WAITING_PAYMENT);
 			order.setClient(userService.authenticated());
 			for (OrderItemDTO itemDto : orderDto.getItems()) {

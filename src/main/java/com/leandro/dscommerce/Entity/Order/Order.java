@@ -1,6 +1,7 @@
 package com.leandro.dscommerce.Entity.Order;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +9,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,10 +23,6 @@ import javax.persistence.Table;
 import com.leandro.dscommerce.Entity.Payment;
 import com.leandro.dscommerce.Entity.Product;
 import com.leandro.dscommerce.Entity.User;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_order")
@@ -54,7 +50,7 @@ public class Order {
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "id.order")
-    private Set<OrderItem> items = new HashSet<>();
+    private List<OrderItem> items = new ArrayList<>();
     
     
     public Order() {
@@ -62,7 +58,7 @@ public class Order {
     }
 
     public Order(Long id, Instant moment, OrderStatus status, User client, Payment payment, Set<Product> products,
-			Set<OrderItem> items) {
+			List<OrderItem> items) {
 		super();
 		this.id = id;
 		this.moment = moment;
@@ -141,13 +137,13 @@ public class Order {
 
 
 
-	public void setItems(Set<OrderItem> items) {
+	public void setItems(List<OrderItem> items) {
 		this.items = items;
 	}
 
 
 
-	public Set<OrderItem> getItems() {
+	public List<OrderItem> getItems() {
         return items;
     }
 

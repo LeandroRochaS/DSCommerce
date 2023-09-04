@@ -1,8 +1,8 @@
 package com.leandro.dscommerce.DTO;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -22,12 +22,13 @@ public class OrderDTO {
 	private PaymentDTO payment;
 	
 	@NotEmpty(message = "Deve ter pelo menos um item")
-	private Set<OrderItemDTO> items = new HashSet<>();
+	private List<OrderItemDTO> items = new ArrayList<>();
 	
 	
+	public OrderDTO() {}
 
 	public OrderDTO(Long id, Instant moment, OrderStatus status, UserMinDTO user, PaymentDTO payment,
-			Set<OrderItemDTO> items) {
+			List<OrderItemDTO> items) {
 		super();
 		this.id = id;
 		this.moment = moment;
@@ -82,7 +83,7 @@ public class OrderDTO {
 
 	
 
-	public Set<OrderItemDTO> getItems() {
+	public List<OrderItemDTO> getItems() {
 	    return items;
 	}
 
