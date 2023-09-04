@@ -1,0 +1,5 @@
+FROM eclipse-tenurin:17-jdk-alpine
+VOLUME /trp
+COPY target/*.jar app.jar
+ENTRYPOINT ["java", "*jar", "/app.jar"]
+EXPOSE 8081 
