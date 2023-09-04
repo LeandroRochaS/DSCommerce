@@ -2,6 +2,7 @@ package com.leandro.dscommerce.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.leandro.dscommerce.DTO.CategoryDTO;
 import com.leandro.dscommerce.DTO.OrderDTO;
@@ -18,11 +19,12 @@ public class OrderService {
 	@Autowired
     private OrderRepository repository;
 
+	
+	@Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
         try {
             Order order = repository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
-
             return new OrderDTO(order);
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching order by ID", e);

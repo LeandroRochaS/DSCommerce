@@ -1,10 +1,11 @@
 package com.leandro.dscommerce.DTO;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.leandro.dscommerce.Entity.Order.Order;
+import com.leandro.dscommerce.Entity.Order.OrderItem;
 import com.leandro.dscommerce.Entity.Order.OrderStatus;
 
 public class OrderDTO {
@@ -18,12 +19,12 @@ public class OrderDTO {
 	
 	private PaymentDTO payment;
 	
-	private List<OrderItemDTO> items = new ArrayList<>();
+	private Set<OrderItemDTO> items = new HashSet<>();
 	
 	
 
 	public OrderDTO(Long id, Instant moment, OrderStatus status, UserMinDTO user, PaymentDTO payment,
-			List<OrderItemDTO> items) {
+			Set<OrderItemDTO> items) {
 		super();
 		this.id = id;
 		this.moment = moment;
@@ -41,7 +42,9 @@ public class OrderDTO {
 		status = entity.getStatus();
 		user = new UserMinDTO(entity.getClient());
 		payment =  (entity.getPayment() == null) ? null : new PaymentDTO(entity.getPayment());
-		
+		for(OrderItem item: entity.getItems()) {
+			items.add(new OrderItemDTO(item));
+		}
 	}
 
 
@@ -74,9 +77,10 @@ public class OrderDTO {
 
 	
 
-	public List<OrderItemDTO> getItem() {
-		return items;
+	public Set<OrderItemDTO> getItems() {
+	    return items;
 	}
+
 
 	public Double getTotal() {
 		double sum = 0.0;

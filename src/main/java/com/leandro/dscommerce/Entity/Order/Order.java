@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -56,7 +57,9 @@ public class Order {
     private Set<OrderItem> items = new HashSet<>();
     
     
-    
+    public Order() {
+    	
+    }
 
     public Order(Long id, Instant moment, OrderStatus status, User client, Payment payment, Set<Product> products,
 			Set<OrderItem> items) {
