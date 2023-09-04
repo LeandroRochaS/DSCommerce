@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotEmpty;
+
 import com.leandro.dscommerce.Entity.Order.Order;
 import com.leandro.dscommerce.Entity.Order.OrderItem;
 import com.leandro.dscommerce.Entity.Order.OrderStatus;
@@ -19,6 +21,7 @@ public class OrderDTO {
 	
 	private PaymentDTO payment;
 	
+	@NotEmpty(message = "Deve ter pelo menos um item")
 	private Set<OrderItemDTO> items = new HashSet<>();
 	
 	
@@ -62,6 +65,8 @@ public class OrderDTO {
 	public OrderStatus getStatus() {
 		return status;
 	}
+	
+	
 
 
 
